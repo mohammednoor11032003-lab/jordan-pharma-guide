@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>دليل الصيدلاني — أدوية السوق الأردني</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ═══════════════ Header ═══════════════ -->
+  <header class="app-header">
+    <div class="header-top">
+      <div class="logo">
+        <span class="logo-icon">💊</span>
+        <div class="logo-text">
+          <h1>دليل الصيدلاني</h1>
+          <p class="subtitle">أدوية السوق الأردني</p>
+        </div>
+      </div>
+      <div class="stats" id="stats"></div>
+    </div>
+    <div class="search-container">
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input
+          type="search"
+          id="searchInput"
+          class="search-input"
+          placeholder="ابحث بالاسم التجاري أو العلمي..."
+          autocomplete="off"
+        >
+        <button class="search-clear" id="searchClear" aria-label="مسح البحث">✕</button>
+      </div>
+      <div class="search-results" id="searchResults"></div>
+    </div>
+  </header>
+
+  <!-- ═══════════════ Chapter Filter ═══════════════ -->
+  <nav class="chapter-filter" id="chapterFilter">
+    <button class="filter-btn active" data-chapter="all">الكل</button>
+  </nav>
+
+  <!-- ═══════════════ Main Content ═══════════════ -->
+  <main class="drug-tree" id="drugTree">
+    <!-- يتم بناؤها ديناميكياً عبر JavaScript -->
+  </main>
+
+  <!-- ═══════════════ Drug Modal ═══════════════ -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-card" id="modalCard">
+      <button class="modal-close" id="modalClose" aria-label="إغلاق">✕</button>
+
+      <div class="modal-breadcrumb" id="modalBreadcrumb"></div>
+
+      <div class="modal-header">
+        <div class="modal-drug-image" id="modalImage">
+          <span class="placeholder-icon">💊</span>
+        </div>
+        <div class="modal-drug-info">
+          <h2 class="modal-trade-name" id="modalTradeName" dir="ltr"></h2>
+          <p class="modal-scientific" id="modalScientific" dir="ltr"></p>
+          <span class="modal-family-badge" id="modalFamily" dir="ltr"></span>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <h3 class="modal-section-title">
+          <span class="section-icon">💉</span>
+          الأشكال الصيدلانية والجرعات
+        </h3>
+        <div class="dosage-table-wrapper">
+          <table class="dosage-table" id="modalDosageTable">
+            <thead>
+              <tr>
+                <th>الشكل</th>
+                <th>العيار</th>
+                <th>الجرعة</th>
+              </tr>
+            </thead>
+            <tbody id="modalDosageBody"></tbody>
+          </table>
+        </div>
+        <div class="max-dose-info" id="modalMaxDose"></div>
+      </div>
+
+      <div class="modal-section">
+        <h3 class="modal-section-title">
+          <span class="section-icon">🔄</span>
+          البدائل
+        </h3>
+        <div class="alternatives-list" id="modalAlternatives"></div>
+      </div>
+
+      <div class="modal-section">
+        <h3 class="modal-section-title">
+          <span class="section-icon">📋</span>
+          نقاط الاستشارة
+        </h3>
+        <div class="counseling-points" id="modalCounseling">
+          <p class="empty-state">لم تُضَف بعد</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ Scroll to Top ═══════════════ -->
+  <button class="scroll-top" id="scrollTop" aria-label="العودة للأعلى">↑</button>
+
+  <!-- ═══════════════ Scripts ═══════════════ -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,993 @@
+/* ═══════════════════════════════════════════
+   CSS Variables & Reset
+   ═══════════════════════════════════════════ */
+:root {
+  --primary: #1976D2;
+  --primary-dark: #1565C0;
+  --primary-light: #42A5F5;
+  --primary-bg: #E3F2FD;
+  --secondary: #00897B;
+  --secondary-bg: #E0F2F1;
+  --accent: #FF6F00;
+  --bg: #F5F7FA;
+  --bg-white: #FFFFFF;
+  --text: #263238;
+  --text-light: #546E7A;
+  --text-muted: #90A4AE;
+  --border: #E0E0E0;
+  --border-light: #F0F0F0;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.12);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,0.18);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --font: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+  --transition: 0.2s ease;
+
+  /* Accordion Level Colors */
+  --chapter-bg: #1976D2;
+  --chapter-text: #FFFFFF;
+  --section-bg: #E3F2FD;
+  --section-text: #1565C0;
+  --family-bg: #F5F7FA;
+  --family-text: #263238;
+  --scientific-bg: #FFFFFF;
+  --scientific-text: #00897B;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  direction: rtl;
+  text-align: right;
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══════════════════════════════════════════
+   Header
+   ═══════════════════════════════════════════ */
+.app-header {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: white;
+  padding: 16px 16px 12px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-md);
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon {
+  font-size: 2rem;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.logo-text h1 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+.logo-text .subtitle {
+  font-size: 0.75rem;
+  opacity: 0.85;
+  font-weight: 400;
+}
+
+.stats {
+  font-size: 0.7rem;
+  opacity: 0.8;
+  text-align: left;
+  direction: ltr;
+  line-height: 1.4;
+}
+
+/* ═══════════════════════════════════════════
+   Search
+   ═══════════════════════════════════════════ */
+.search-container {
+  position: relative;
+}
+
+.search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  right: 12px;
+  font-size: 1rem;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 40px 10px 36px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: var(--radius-lg);
+  background: rgba(255,255,255,0.15);
+  color: white;
+  font-family: var(--font);
+  font-size: 0.9rem;
+  outline: none;
+  transition: var(--transition);
+  direction: rtl;
+}
+
+.search-input::placeholder {
+  color: rgba(255,255,255,0.6);
+}
+
+.search-input:focus {
+  background: rgba(255,255,255,0.95);
+  color: var(--text);
+  border-color: white;
+}
+
+.search-input:focus::placeholder {
+  color: var(--text-muted);
+}
+
+.search-clear {
+  position: absolute;
+  left: 10px;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.6);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px;
+  display: none;
+  transition: var(--transition);
+}
+
+.search-input:focus ~ .search-clear {
+  color: var(--text-muted);
+}
+
+.search-clear.visible {
+  display: block;
+}
+
+.search-results {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: var(--bg-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  max-height: 60vh;
+  overflow-y: auto;
+  display: none;
+  z-index: 200;
+}
+
+.search-results.visible {
+  display: block;
+}
+
+.search-result-item {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-light);
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--text);
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+.search-result-item:hover,
+.search-result-item:focus {
+  background: var(--primary-bg);
+}
+
+.search-result-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  direction: ltr;
+  text-align: right;
+  color: var(--primary-dark);
+}
+
+.search-result-scientific {
+  font-size: 0.8rem;
+  color: var(--secondary);
+  direction: ltr;
+  text-align: right;
+}
+
+.search-result-path {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+  direction: rtl;
+}
+
+.search-no-results {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* ═══════════════════════════════════════════
+   Chapter Filter
+   ═══════════════════════════════════════════ */
+.chapter-filter {
+  display: flex;
+  gap: 6px;
+  padding: 10px 16px;
+  overflow-x: auto;
+  background: var(--bg-white);
+  border-bottom: 1px solid var(--border);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.chapter-filter::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-btn {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  background: var(--bg-white);
+  color: var(--text-light);
+  font-family: var(--font);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.filter-btn:hover {
+  border-color: var(--primary-light);
+  color: var(--primary);
+}
+
+.filter-btn.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* ═══════════════════════════════════════════
+   Drug Tree (Accordion)
+   ═══════════════════════════════════════════ */
+.drug-tree {
+  padding: 12px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* --- Chapter Level (Level 0) --- */
+.accordion-chapter {
+  margin-bottom: 10px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.accordion-chapter-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: var(--chapter-bg);
+  color: var(--chapter-text);
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--transition);
+  border: none;
+  width: 100%;
+  text-align: right;
+  font-family: var(--font);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.accordion-chapter-header:hover {
+  background: var(--primary-dark);
+}
+
+.accordion-chapter-header .chapter-number {
+  background: rgba(255,255,255,0.2);
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.accordion-chapter-header .chapter-name {
+  flex: 1;
+}
+
+.accordion-chapter-header .chapter-name-en {
+  font-size: 0.75rem;
+  opacity: 0.8;
+  font-weight: 400;
+  direction: ltr;
+  display: inline;
+  margin-right: 6px;
+}
+
+.accordion-arrow {
+  font-size: 0.7rem;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.accordion-open > .accordion-chapter-header .accordion-arrow,
+.accordion-open > .accordion-section-header .accordion-arrow,
+.accordion-open > .accordion-family-header .accordion-arrow {
+  transform: rotate(90deg);
+}
+
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+
+.accordion-open > .accordion-content {
+  max-height: none;
+}
+
+/* --- Section Level (Level 1) --- */
+.accordion-section {
+  border-top: 1px solid var(--border-light);
+}
+
+.accordion-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 16px 11px 16px;
+  padding-right: 28px;
+  background: var(--section-bg);
+  color: var(--section-text);
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--transition);
+  border: none;
+  width: 100%;
+  text-align: right;
+  font-family: var(--font);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.accordion-section-header:hover {
+  background: #d0e8fc;
+}
+
+.accordion-section-header .section-number {
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  min-width: 30px;
+}
+
+/* --- Family Level (Level 2) --- */
+.accordion-family {
+  border-top: 1px solid var(--border-light);
+}
+
+.accordion-family-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px 10px 16px;
+  padding-right: 44px;
+  background: var(--family-bg);
+  color: var(--family-text);
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--transition);
+  border: none;
+  width: 100%;
+  text-align: right;
+  font-family: var(--font);
+  font-size: 0.85rem;
+  font-weight: 600;
+  direction: ltr;
+}
+
+.accordion-family-header:hover {
+  background: #eef0f3;
+}
+
+.accordion-family-header .family-number {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  min-width: 36px;
+  text-align: left;
+}
+
+.accordion-family-header .family-name {
+  flex: 1;
+  text-align: left;
+}
+
+/* --- Scientific Name (Level 3) --- */
+.scientific-group {
+  padding: 8px 16px 8px 16px;
+  padding-right: 58px;
+  border-top: 1px solid var(--border-light);
+  background: var(--bg-white);
+}
+
+.scientific-name-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--secondary);
+  direction: ltr;
+  text-align: right;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.scientific-name-label::before {
+  content: "⚗️";
+  font-size: 0.75rem;
+}
+
+/* --- Trade Names (Level 4) --- */
+.trade-names-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-right: 10px;
+}
+
+.trade-name-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  background: var(--primary-bg);
+  color: var(--primary-dark);
+  border: 1px solid #bbdefb;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  direction: ltr;
+}
+
+.trade-name-chip:hover {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.trade-name-chip .chip-icon {
+  font-size: 0.65rem;
+}
+
+/* ═══════════════════════════════════════════
+   Modal
+   ═══════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+}
+
+.modal-overlay.visible {
+  display: flex;
+}
+
+.modal-card {
+  background: var(--bg-white);
+  width: 100%;
+  max-width: 600px;
+  max-height: 92vh;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  overflow-y: auto;
+  position: relative;
+  animation: slideUp 0.3s ease;
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-close {
+  position: sticky;
+  top: 0;
+  float: left;
+  margin: 12px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--bg);
+  border-radius: 50%;
+  font-size: 1rem;
+  color: var(--text-light);
+  cursor: pointer;
+  z-index: 10;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close:hover {
+  background: #fee;
+  color: #d32f2f;
+}
+
+.modal-breadcrumb {
+  padding: 14px 16px 0;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  direction: rtl;
+  line-height: 1.6;
+}
+
+.modal-breadcrumb span {
+  white-space: nowrap;
+}
+
+.breadcrumb-sep {
+  margin: 0 4px;
+  opacity: 0.5;
+}
+
+.modal-header {
+  display: flex;
+  gap: 14px;
+  padding: 14px 16px;
+  align-items: center;
+}
+
+.modal-drug-image {
+  width: 90px;
+  height: 90px;
+  border-radius: var(--radius-md);
+  background: #f8fafc;
+  border: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.modal-drug-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
+.modal-drug-image img:hover {
+  transform: scale(1.08);
+}
+
+.modal-drug-image .placeholder-icon {
+  font-size: 2rem;
+  opacity: 0.5;
+}
+
+.modal-drug-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.modal-trade-name {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+  text-align: left;
+  line-height: 1.2;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.modal-scientific {
+  font-size: 0.9rem;
+  color: var(--secondary);
+  text-align: left;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.modal-family-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  background: var(--secondary-bg);
+  color: var(--secondary);
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  margin-top: 6px;
+  text-align: left;
+}
+
+.modal-section {
+  padding: 0 16px 16px;
+}
+
+.modal-section-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--primary-bg);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.section-icon {
+  font-size: 0.85rem;
+}
+
+/* --- Dosage Table --- */
+.dosage-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.dosage-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  min-width: 320px;
+}
+
+.dosage-table thead {
+  background: var(--primary-bg);
+}
+
+.dosage-table th {
+  padding: 8px 10px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.dosage-table td {
+  padding: 8px 10px;
+  border-top: 1px solid var(--border-light);
+  vertical-align: top;
+}
+
+.dosage-table tr:nth-child(even) {
+  background: #fafbfc;
+}
+
+.dosage-table .dose-cell {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.dosage-table .form-cell {
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.dosage-table .strength-cell {
+  direction: ltr;
+  text-align: right;
+  font-weight: 600;
+  color: var(--primary);
+  white-space: nowrap;
+}
+
+.max-dose-info {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: #FFF3E0;
+  border: 1px solid #FFE0B2;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  color: #E65100;
+  font-weight: 600;
+  display: none;
+}
+
+.max-dose-info.visible {
+  display: block;
+}
+
+/* --- Alternatives --- */
+.alternatives-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.alternative-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  background: var(--secondary-bg);
+  color: var(--secondary);
+  border: 1px solid #b2dfdb;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  direction: ltr;
+}
+
+.alternative-chip:hover {
+  background: var(--secondary);
+  color: white;
+  border-color: var(--secondary);
+}
+
+.alternative-chip.current {
+  background: var(--primary-bg);
+  color: var(--primary);
+  border-color: var(--primary-light);
+  cursor: default;
+  font-weight: 800;
+}
+
+.no-alternatives {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* --- Counseling Points --- */
+.counseling-points .empty-state {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 8px 0;
+}
+
+.counseling-points ul {
+  list-style: none;
+  padding: 0;
+}
+
+.counseling-points li {
+  padding: 6px 0;
+  padding-right: 16px;
+  position: relative;
+  font-size: 0.85rem;
+}
+
+.counseling-points li::before {
+  content: "•";
+  position: absolute;
+  right: 0;
+  color: var(--primary);
+  font-weight: bold;
+}
+
+/* ═══════════════════════════════════════════
+   Scroll to Top
+   ═══════════════════════════════════════════ */
+.scroll-top {
+  position: fixed;
+  bottom: 24px;
+  left: 20px;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  z-index: 50;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.scroll-top.visible {
+  display: flex;
+}
+
+.scroll-top:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* ═══════════════════════════════════════════
+   Empty / Loading States
+   ═══════════════════════════════════════════ */
+.empty-tree {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+}
+
+.empty-tree .empty-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.empty-tree h3 {
+  font-size: 1.1rem;
+  color: var(--text-light);
+  margin-bottom: 6px;
+}
+
+/* ═══════════════════════════════════════════
+   Desktop Enhancements
+   ═══════════════════════════════════════════ */
+@media (min-width: 768px) {
+  .app-header {
+    padding: 20px 24px 16px;
+  }
+
+  .logo-text h1 {
+    font-size: 1.5rem;
+  }
+
+  .search-input {
+    font-size: 1rem;
+    padding: 12px 44px 12px 40px;
+  }
+
+  .chapter-filter {
+    padding: 12px 24px;
+    justify-content: center;
+  }
+
+  .drug-tree {
+    padding: 16px 24px;
+  }
+
+  .modal-overlay {
+    align-items: center;
+    padding: 20px;
+  }
+
+  .modal-card {
+    border-radius: var(--radius-lg);
+    max-height: 85vh;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .accordion-chapter-header {
+    font-size: 1.05rem;
+    padding: 16px 20px;
+  }
+
+  .accordion-section-header {
+    padding: 12px 20px 12px 20px;
+    padding-right: 36px;
+  }
+
+  .accordion-family-header {
+    padding-right: 52px;
+  }
+
+  .scientific-group {
+    padding-right: 68px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .drug-tree {
+    max-width: 960px;
+  }
+
+  .modal-card {
+    max-width: 640px;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   Accessibility & Utilities
+   ═══════════════════════════════════════════ */
+*:focus-visible {
+  outline: 2px solid var(--primary-light);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for modal */
+.modal-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-card::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+/* Hide spin buttons for search on webkit */
+.search-input::-webkit-search-cancel-button,
+.search-input::-webkit-search-decoration {
+  display: none;
+}
+
+/* Highlight matching text in search results */
+.highlight {
+  background: #FFF176;
+  border-radius: 2px;
+  padding: 0 1px;
+}
