@@ -361,8 +361,7 @@
     `;
 
     // Header
-    const tradeArHtml = drug.trade_name_ar ? ` <span class="trade-name-ar" style="font-size:0.85em; opacity:0.85; margin-right:6px">(${escapeHtml(drug.trade_name_ar)})</span>` : '';
-    $('#modalTradeName').innerHTML = escapeHtml(drug.trade_name) + tradeArHtml;
+    $('#modalTradeName').textContent = drug.trade_name;
     $('#modalScientific').textContent = drugInfo.scientific_name;
     $('#modalFamily').textContent = drugInfo.family_name;
 
