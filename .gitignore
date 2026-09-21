@@ -11,3 +11,5 @@ Thumbs.db
 
 # Local backups
 backups/
+backup_v1/
+backup_before_flashcards/
