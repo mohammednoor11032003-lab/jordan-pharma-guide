@@ -428,6 +428,62 @@ body {
   margin-top: 4px;
 }
 
+/* Hierarchy Stack (Chapter -> Section -> Family) */
+.back-hierarchy-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hierarchy-item {
+  padding: 8px 12px;
+  background: #F8FAFC;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+
+.hierarchy-item:hover {
+  border-color: #90CAF9;
+  background: #FFFFFF;
+}
+
+.hierarchy-val {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.hierarchy-num {
+  color: var(--primary);
+  background: #E3F2FD;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  direction: ltr;
+  unicode-bidi: isolate;
+  flex-shrink: 0;
+}
+
+.hierarchy-name-ar {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.hierarchy-name-en {
+  color: var(--text-light);
+  font-size: 0.82rem;
+  font-weight: 500;
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: inline-block;
+  opacity: 0.85;
+}
+
 /* Alternatives List for Mode 2 */
 .alternatives-list {
   display: flex;

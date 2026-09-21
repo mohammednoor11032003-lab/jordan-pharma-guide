@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cardChapterBadge.style.display = 'none';
 
         // تحديث شارة الوجه الخلفي لتظهر كجزء من الإجابة بعد القلب
-        const chapterLabel = `${card.chapter_icon} Ch ${card.chapter_number}: ${card.chapter_name}`;
+        const chapterLabel = `${card.chapter_icon} Ch ${card.chapter_number}: ${card.chapter_name}${card.chapter_name_en ? ' | ' + card.chapter_name_en : ''}`;
         cardBackBadge.textContent = chapterLabel;
 
         // بناء الوجه الأمامي والوجه الخلفي حسب الوضع
@@ -117,14 +117,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${back.scientific_name_ar ? `<div style="color: var(--text-light); font-size: 0.95rem; margin-top: 2px;">${back.scientific_name_ar}</div>` : ''}
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <div class="back-info-item">
-                    <div class="back-info-label">العائلة الدوائية (Drug Family)</div>
-                    <div class="back-info-value" style="color: var(--primary-dark); font-size: 0.95rem;">${back.family_name}</div>
+            <!-- الترتيب الهرمي المنطقي: الشابتر ثم القسم ثم العائلة الدوائية -->
+            <div class="back-hierarchy-group">
+                <!-- 1. الشابتر (N) -->
+                <div class="back-info-item hierarchy-item">
+                    <div class="back-info-label">1️⃣ الشابتر (Chapter)</div>
+                    <div class="back-info-value hierarchy-val">
+                        <span class="hierarchy-num">Ch ${back.chapter_number}</span>
+                        <span class="hierarchy-name-ar">${back.chapter_name}</span>
+                        ${back.chapter_name_en ? `<span class="hierarchy-name-en">| ${back.chapter_name_en}</span>` : ''}
+                    </div>
                 </div>
-                <div class="back-info-item">
-                    <div class="back-info-label">الشابتر التابع له</div>
-                    <div class="back-info-value" style="color: var(--text); font-size: 0.95rem;">Ch ${card.chapter_number}: ${card.chapter_name}</div>
+
+                <!-- 2. القسم (N.x) -->
+                <div class="back-info-item hierarchy-item">
+                    <div class="back-info-label">2️⃣ القسم (Section)</div>
+                    <div class="back-info-value hierarchy-val">
+                        <span class="hierarchy-num">${back.section_number}</span>
+                        <span class="hierarchy-name-ar">${back.section_name}</span>
+                        ${back.section_name_en ? `<span class="hierarchy-name-en">| ${back.section_name_en}</span>` : ''}
+                    </div>
+                </div>
+
+                <!-- 3. العائلة الدوائية (N.x.x) -->
+                <div class="back-info-item hierarchy-item">
+                    <div class="back-info-label">3️⃣ العائلة الدوائية (Drug Family)</div>
+                    <div class="back-info-value hierarchy-val">
+                        <span class="hierarchy-num">${back.family_number}</span>
+                        <span class="hierarchy-name-ar">${back.family_name}</span>
+                        ${back.family_name_en ? `<span class="hierarchy-name-en">| ${back.family_name_en}</span>` : ''}
+                    </div>
                 </div>
             </div>
 
@@ -182,8 +204,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         cardBackBody.innerHTML = `
             <div class="back-info-item">
-                <div class="back-info-label">العائلة الدوائية</div>
-                <div class="back-info-value" style="color: var(--primary-dark); font-size: 1.1rem;">${back.family_name}</div>
+                <div class="back-info-label">العائلة الدوائية (Drug Family)</div>
+                <div class="back-info-value" style="color: var(--primary-dark); font-size: 1.05rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <span class="hierarchy-num">${back.family_number}</span>
+                    <span>${back.family_name}</span>
+                    ${back.family_name_en ? `<span class="hierarchy-name-en">| ${back.family_name_en}</span>` : ''}
+                </div>
             </div>
 
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">

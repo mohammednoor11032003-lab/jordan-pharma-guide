@@ -87,13 +87,18 @@ class FlashcardsEngine {
         targetChapters.forEach(chapter => {
             const chNum = chapter.number;
             const chName = chapter.name;
+            const chNameEn = chapter.name_en || "";
             const chIcon = cleanIcon(chapter.icon);
 
             (chapter.sections || []).forEach(section => {
+                const secNum = section.number;
                 const secName = section.name;
+                const secNameEn = section.name_en || "";
 
                 (section.families || []).forEach(family => {
+                    const famNum = family.number;
                     const famName = family.name;
+                    const famNameEn = family.name_en || "";
 
                     (family.drugs || []).forEach(drug => {
                         const genericKey = (drug.scientific_name || "").trim().toLowerCase();
@@ -105,9 +110,14 @@ class FlashcardsEngine {
                                 id: `presc_${chNum}_${drug.id || genericKey.replace(/\s+/g, '_')}`,
                                 chapter_number: chNum,
                                 chapter_name: chName,
+                                chapter_name_en: chNameEn,
                                 chapter_icon: chIcon,
+                                section_number: secNum,
                                 section_name: secName,
+                                section_name_en: secNameEn,
+                                family_number: famNum,
                                 family_name: famName,
+                                family_name_en: famNameEn,
                                 scientific_name: drug.scientific_name,
                                 scientific_name_ar: drug.scientific_name_ar || "",
                                 adult_dose: drug.adult_dose || "غير محدد",
@@ -132,9 +142,14 @@ class FlashcardsEngine {
                                 mode: 'counter_challenge',
                                 chapter_number: chNum,
                                 chapter_name: chName,
+                                chapter_name_en: chNameEn,
                                 chapter_icon: chIcon,
+                                section_number: secNum,
                                 section_name: secName,
+                                section_name_en: secNameEn,
+                                family_number: famNum,
                                 family_name: famName,
+                                family_name_en: famNameEn,
                                 // الوجه الأمامي
                                 front: {
                                     trade_name: trade.trade_name,
@@ -147,7 +162,16 @@ class FlashcardsEngine {
                                 back: {
                                     scientific_name: drug.scientific_name,
                                     scientific_name_ar: drug.scientific_name_ar || "",
+                                    chapter_number: chNum,
+                                    chapter_name: chName,
+                                    chapter_name_en: chNameEn,
+                                    chapter_icon: chIcon,
+                                    section_number: secNum,
+                                    section_name: secName,
+                                    section_name_en: secNameEn,
+                                    family_number: famNum,
                                     family_name: famName,
+                                    family_name_en: famNameEn,
                                     manufacturer: trade.manufacturer || "غير محدد",
                                     forms: trade.forms || "غير محدد",
                                     dosage: trade.dosage || "غير محدد",
@@ -158,8 +182,8 @@ class FlashcardsEngine {
                             this.counterPool.push(counterCard);
 
                             // إضافة هذا المستحضر التجاري إلى قائمة بدائل الاسم العلمي دون أي تكرار
-                            const alreadyExists = genericEntry.trade_names.some(t => t.trade_name === trade.trade_name);
-                            if (!alreadyExists) {
+                            const tradeExists = genericEntry.trade_names.some(t => t.trade_name.toLowerCase() === trade.trade_name.toLowerCase());
+                            if (!tradeExists) {
                                 genericEntry.trade_names.push({
                                     trade_name: trade.trade_name,
                                     manufacturer: trade.manufacturer || "غير محدد",
@@ -184,9 +208,14 @@ class FlashcardsEngine {
                     mode: 'prescription_challenge',
                     chapter_number: entry.chapter_number,
                     chapter_name: entry.chapter_name,
+                    chapter_name_en: entry.chapter_name_en,
                     chapter_icon: entry.chapter_icon,
+                    section_number: entry.section_number,
                     section_name: entry.section_name,
+                    section_name_en: entry.section_name_en,
+                    family_number: entry.family_number,
                     family_name: entry.family_name,
+                    family_name_en: entry.family_name_en,
                     // الوجه الأمامي
                     front: {
                         scientific_name: entry.scientific_name,
@@ -195,7 +224,15 @@ class FlashcardsEngine {
                     },
                     // الوجه الخلفي (عند النقر للقلب)
                     back: {
+                        chapter_number: entry.chapter_number,
+                        chapter_name: entry.chapter_name,
+                        chapter_name_en: entry.chapter_name_en,
+                        section_number: entry.section_number,
+                        section_name: entry.section_name,
+                        section_name_en: entry.section_name_en,
+                        family_number: entry.family_number,
                         family_name: entry.family_name,
+                        family_name_en: entry.family_name_en,
                         trade_names: entry.trade_names,
                         total_alternatives: entry.trade_names.length,
                         adult_dose: entry.adult_dose,
