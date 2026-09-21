@@ -144,7 +144,10 @@
     el.innerHTML = `
       <button class="accordion-section-header" aria-expanded="false">
         <span class="section-number">${section.number}</span>
-        <span class="section-name">${section.name}</span>
+        <span class="section-name">
+          ${section.name}
+          ${section.name_en ? `<span class="section-name-en">${section.name_en}</span>` : ''}
+        </span>
         <span class="accordion-arrow">◀</span>
       </button>
       <div class="accordion-content"></div>
@@ -165,9 +168,12 @@
 
     el.innerHTML = `
       <button class="accordion-family-header" aria-expanded="false">
-        <span class="accordion-arrow">◀</span>
         <span class="family-number">${family.number}</span>
-        <span class="family-name">${family.name}</span>
+        <span class="family-name">
+          ${family.name}
+          ${family.name_en ? `<span class="family-name-en">${family.name_en}</span>` : ''}
+        </span>
+        <span class="accordion-arrow">◀</span>
       </button>
       <div class="accordion-content"></div>
     `;
