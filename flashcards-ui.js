@@ -16,7 +16,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const engine = new FlashcardsEngine(DRUG_DATABASE);
 
     // 3. عناصر الواجهة
-    const chapterSelect = document.getElementById('chapterSelect');
+    const chapterMultiselectContainer = document.getElementById('chapterMultiselectContainer');
+    const multiselectTrigger = document.getElementById('multiselectTrigger');
+    const triggerText = document.getElementById('triggerText');
+    const multiselectDropdown = document.getElementById('multiselectDropdown');
+    const multiselectList = document.getElementById('multiselectList');
+    const btnSelectAll = document.getElementById('btnSelectAll');
+    const btnClearAll = document.getElementById('btnClearAll');
+    const chipsScrollTrack = document.getElementById('chipsScrollTrack');
     const poolCounter = document.getElementById('poolCounter');
     const modeCounterBtn = document.getElementById('modeCounterBtn');
     const modePrescriptionBtn = document.getElementById('modePrescriptionBtn');
@@ -32,19 +39,116 @@ document.addEventListener('DOMContentLoaded', () => {
     const cardBackBadge = document.getElementById('cardBackBadge');
     const cardBackBody = document.getElementById('cardBackBody');
 
-    // حالة البطاقة الحالية
+    // حالة البطاقة الحالية والشباتر المحددة
     let currentCard = null;
+    let selectedChapters = ['all'];
+    const chaptersList = engine.getChaptersList();
 
-    // 4. تعبئة قائمة الشباتر في الـ Dropdown
-    function populateChaptersDropdown() {
-        chapterSelect.innerHTML = '<option value="all">🌟 جميع الشباتر (كامل قاعدة البيانات - 17 شابتر)</option>';
-        const chapters = engine.getChaptersList();
-        chapters.forEach(ch => {
-            const opt = document.createElement('option');
-            opt.value = ch.number;
-            opt.textContent = `${ch.icon} Chapter ${ch.number}: ${ch.name}`;
-            chapterSelect.appendChild(opt);
+    // 4. بناء واجهة التحديد المتعدد (Dropdown Checkboxes + Chips Bar)
+    function populateMultiSelectUI() {
+        // أ. تعبئة قائمة الـ Dropdown مع Checkboxes
+        multiselectList.innerHTML = '';
+
+        // خيار "جميع الشباتر"
+        const allItem = document.createElement('label');
+        allItem.className = 'multiselect-item active';
+        allItem.dataset.chapter = 'all';
+        allItem.innerHTML = `
+            <input type="checkbox" value="all" checked>
+            <span class="multiselect-item-text">🌟 جميع الشباتر (كامل قاعدة البيانات)</span>
+        `;
+        multiselectList.appendChild(allItem);
+
+        // خيارات الشباتر 1-17
+        chaptersList.forEach(ch => {
+            const item = document.createElement('label');
+            item.className = 'multiselect-item';
+            item.dataset.chapter = String(ch.number);
+            item.innerHTML = `
+                <input type="checkbox" value="${ch.number}">
+                <span class="multiselect-item-text">${ch.icon} Chapter ${ch.number}: ${ch.name}</span>
+            `;
+            multiselectList.appendChild(item);
         });
+
+        // ب. تعبئة شريط التمرير الأفقي للأزرار (Chips)
+        chipsScrollTrack.innerHTML = '';
+
+        const allChip = document.createElement('button');
+        allChip.type = 'button';
+        allChip.className = 'chip-btn active';
+        allChip.dataset.chapter = 'all';
+        allChip.innerHTML = `<span>🌟</span> <span>الكل (17 شابتر)</span>`;
+        chipsScrollTrack.appendChild(allChip);
+
+        chaptersList.forEach(ch => {
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'chip-btn';
+            chip.dataset.chapter = String(ch.number);
+            chip.innerHTML = `<span>${ch.icon}</span> <span>Ch ${ch.number}: ${ch.name}</span>`;
+            chipsScrollTrack.appendChild(chip);
+        });
+    }
+
+    // مزامنة حالة عناصر الواجهة مع selectedChapters
+    function updateFilterUI() {
+        const isAll = selectedChapters.includes('all') || selectedChapters.length === 0;
+
+        // 1. تحديث نص زر القائمة المنسدلة
+        if (isAll) {
+            triggerText.textContent = '🌟 جميع الشباتر (17 شابتر)';
+        } else if (selectedChapters.length === 1) {
+            const ch = chaptersList.find(c => c.number === selectedChapters[0]);
+            triggerText.textContent = ch ? `${ch.icon} Ch ${ch.number}: ${ch.name}` : `شابتر ${selectedChapters[0]}`;
+        } else {
+            const sorted = [...selectedChapters].sort((a, b) => a - b);
+            triggerText.textContent = `${sorted.length} شباتر محددة (Ch ${sorted.join(', ')})`;
+        }
+
+        // 2. تحديث الـ Checkboxes في القائمة
+        const checkboxItems = multiselectList.querySelectorAll('.multiselect-item');
+        checkboxItems.forEach(item => {
+            const input = item.querySelector('input[type="checkbox"]');
+            const val = input.value;
+            if (val === 'all') {
+                input.checked = isAll;
+                item.classList.toggle('active', isAll);
+            } else {
+                const isSelected = !isAll && selectedChapters.includes(Number(val));
+                input.checked = isSelected;
+                item.classList.toggle('active', isSelected);
+            }
+        });
+
+        // 3. تحديث الأزرار في شريط الـ Chips
+        const chips = chipsScrollTrack.querySelectorAll('.chip-btn');
+        chips.forEach(chip => {
+            const val = chip.dataset.chapter;
+            if (val === 'all') {
+                chip.classList.toggle('active', isAll);
+            } else {
+                const isSelected = !isAll && selectedChapters.includes(Number(val));
+                chip.classList.toggle('active', isSelected);
+            }
+        });
+    }
+
+    // تطبيق فلتر الشباتر المحددة واستدعاء المحرك وسحب أول بطاقة
+    function applyChapterFilter(newSelection) {
+        if (!newSelection || newSelection.length === 0 || newSelection.includes('all')) {
+            selectedChapters = ['all'];
+        } else {
+            selectedChapters = newSelection.map(Number).filter(n => !isNaN(n));
+            if (selectedChapters.length === 0 || selectedChapters.length === chaptersList.length) {
+                selectedChapters = ['all'];
+            }
+        }
+
+        engine.setChapterFilter(selectedChapters);
+        updateCounterBadge();
+        updateFilterUI();
+        nextCard();
     }
 
     // 5. تحديث عداد المستودع
@@ -292,33 +396,116 @@ document.addEventListener('DOMContentLoaded', () => {
         nextCard();
     });
 
-    // تغيير الشابتر من القائمة المنسدلة
-    chapterSelect.addEventListener('change', (e) => {
-        const val = e.target.value;
-        engine.setChapterFilter(val);
-        updateCounterBadge();
-        nextCard();
+    // فتح / إغلاق القائمة المنسدلة للفلترة
+    multiselectTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = multiselectDropdown.style.display === 'block';
+        multiselectDropdown.style.display = isOpen ? 'none' : 'block';
+        multiselectTrigger.setAttribute('aria-expanded', !isOpen);
+    });
+
+    // إغلاق القائمة عند النقر خارجها
+    document.addEventListener('click', (e) => {
+        if (!chapterMultiselectContainer.contains(e.target)) {
+            multiselectDropdown.style.display = 'none';
+            multiselectTrigger.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    // زر تحديد الكل
+    btnSelectAll.addEventListener('click', (e) => {
+        e.stopPropagation();
+        applyChapterFilter(['all']);
+    });
+
+    // زر تفريغ التحديد
+    btnClearAll.addEventListener('click', (e) => {
+        e.stopPropagation();
+        applyChapterFilter([]);
+    });
+
+    // التفاعل مع مربعات الاختيار (Checkboxes) في القائمة المنسدلة
+    multiselectList.addEventListener('change', (e) => {
+        const input = e.target.closest('input[type="checkbox"]');
+        if (!input) return;
+
+        const val = input.value;
+        const isAll = selectedChapters.includes('all') || selectedChapters.length === 0;
+
+        if (val === 'all') {
+            applyChapterFilter(['all']);
+        } else {
+            const chNum = Number(val);
+            if (isAll) {
+                // إذا كان الكل مفعلاً واختار المستخدم شابتر معين، يتم عزله
+                applyChapterFilter([chNum]);
+            } else {
+                let updated = [...selectedChapters];
+                if (input.checked) {
+                    if (!updated.includes(chNum)) updated.push(chNum);
+                } else {
+                    updated = updated.filter(n => n !== chNum);
+                }
+                applyChapterFilter(updated);
+            }
+        }
+    });
+
+    // التفاعل مع أزرار شريط التمرير الأفقي (Chips Bar)
+    chipsScrollTrack.addEventListener('click', (e) => {
+        const chip = e.target.closest('.chip-btn');
+        if (!chip) return;
+
+        const val = chip.dataset.chapter;
+        const isAll = selectedChapters.includes('all') || selectedChapters.length === 0;
+
+        if (val === 'all') {
+            applyChapterFilter(['all']);
+        } else {
+            const chNum = Number(val);
+            if (isAll) {
+                // تفعيل هذا الشابتر تحديداً بدلاً من الكل
+                applyChapterFilter([chNum]);
+            } else {
+                let updated = [...selectedChapters];
+                if (updated.includes(chNum)) {
+                    updated = updated.filter(n => n !== chNum);
+                } else {
+                    updated.push(chNum);
+                }
+                applyChapterFilter(updated);
+            }
+        }
     });
 
     // اختصارات لوحة المفاتيح
     document.addEventListener('keydown', (e) => {
+        // إذا كان التركيز داخل القائمة المنسدلة، اسمح للمستخدم بالتفاعل الطبيعي
+        const isInsideFilter = chapterMultiselectContainer.contains(document.activeElement);
+
+        if (e.key === 'Escape') {
+            multiselectDropdown.style.display = 'none';
+            multiselectTrigger.setAttribute('aria-expanded', 'false');
+            return;
+        }
+
         // المسافة أو الإدخال: قلب البطاقة
         if (e.code === 'Space' || e.key === 'Enter') {
-            // تجنب تشغيل الاختصار إذا كان التركيز في قائمة منسدلة
-            if (document.activeElement === chapterSelect) return;
+            if (isInsideFilter) return;
             e.preventDefault();
             toggleFlip();
         }
         // السهم الأيمن أو السهم الأسفل: البطاقة التالية
         else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
-            if (document.activeElement === chapterSelect) return;
+            if (isInsideFilter) return;
             e.preventDefault();
             nextCard();
         }
     });
 
     // 9. تشغيل الواجهة في البداية
-    populateChaptersDropdown();
+    populateMultiSelectUI();
+    updateFilterUI();
     updateCounterBadge();
     nextCard();
 });

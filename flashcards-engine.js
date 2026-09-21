@@ -27,7 +27,7 @@ class FlashcardsEngine {
             throw new Error("Invalid DRUG_DATABASE provided to FlashcardsEngine");
         }
         this.db = database;
-        this.currentChapterFilter = 'all'; // 'all' or chapter number (e.g. 1, 17)
+        this.currentChapterFilter = ['all']; // ['all'] or array of chapter numbers (e.g. [3, 5, 8])
         this.currentMode = 'counter_challenge'; // 'counter_challenge' (default) or 'prescription_challenge'
         
         // Pools
@@ -42,14 +42,39 @@ class FlashcardsEngine {
         this.rebuildPools();
     }
 
+    get current_chapter_filter() {
+        return this.currentChapterFilter;
+    }
+
+    set current_chapter_filter(val) {
+        this.setChapterFilter(val);
+    }
+
     /**
-     * تحديد نطاق الفلترة (شابتر محدد أو كل الشباتر)
-     * @param {string|number} chapterFilter - 'all' أو رقم الشابتر 1-17
+     * تحديد نطاق الفلترة (مصفوفة أرقام شباتر محددة أو كل الشباتر)
+     * @param {string|number|Array<number|string>} chapterFilter - مصفوفة أرقام الشباتر أو 'all'
      */
     setChapterFilter(chapterFilter) {
-        this.currentChapterFilter = (chapterFilter === 'all' || chapterFilter === null || chapterFilter === undefined)
-            ? 'all'
-            : Number(chapterFilter);
+        let filterArray = [];
+
+        if (Array.isArray(chapterFilter)) {
+            filterArray = chapterFilter;
+        } else if (chapterFilter === 'all' || chapterFilter === null || chapterFilter === undefined || chapterFilter === '') {
+            filterArray = ['all'];
+        } else {
+            filterArray = [chapterFilter];
+        }
+
+        // إذا كانت المصفوفة تحتوي على كلمة 'all' أو كانت فارغة، يتم سحب البطاقات من جميع الشباتر
+        if (filterArray.length === 0 || filterArray.includes('all')) {
+            this.currentChapterFilter = ['all'];
+        } else {
+            const nums = filterArray
+                .map(Number)
+                .filter(n => !isNaN(n) && n > 0 && n <= this.db.chapters.length);
+
+            this.currentChapterFilter = nums.length > 0 ? nums : ['all'];
+        }
         
         this.lastCounterCardId = null;
         this.lastPrescriptionCardId = null;
@@ -79,9 +104,13 @@ class FlashcardsEngine {
         // خريطة لتجميع البدائل التجارية لكل اسم علمي بدقة
         const genericMap = new Map();
 
+        const isAll = !this.currentChapterFilter ||
+                      this.currentChapterFilter.includes('all') ||
+                      this.currentChapterFilter.length === 0;
+
         const targetChapters = this.db.chapters.filter(ch => {
-            if (this.currentChapterFilter === 'all') return true;
-            return ch.number === this.currentChapterFilter;
+            if (isAll) return true;
+            return this.currentChapterFilter.includes(ch.number);
         });
 
         targetChapters.forEach(chapter => {
@@ -244,14 +273,23 @@ class FlashcardsEngine {
     }
 
     /**
+     * اسم بديل متوافق لـ rebuildPools()
+     */
+    buildPools() {
+        return this.rebuildPools();
+    }
+
+    /**
      * إحصائيات المستودع الحالي
      */
     getPoolStats() {
+        const isAll = this.currentChapterFilter.includes('all');
         return {
             current_chapter_filter: this.currentChapterFilter,
             counter_cards_count: this.counterPool.length,
             prescription_cards_count: this.prescriptionPool.length,
-            total_chapters_available: this.db.chapters.length
+            total_chapters_available: this.db.chapters.length,
+            selected_chapters_count: isAll ? this.db.chapters.length : this.currentChapterFilter.length
         };
     }
 

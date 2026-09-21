@@ -45,15 +45,38 @@
         </button>
       </div>
 
-      <!-- اختيار الشابتر وعداد البطاقات -->
+      <!-- اختيار الشابتر وعداد البطاقات (Multi-Select) -->
       <div class="filter-row">
-        <div class="chapter-select-group">
-          <label for="chapterSelect">🎯 نطاق التدريب:</label>
-          <select id="chapterSelect" class="chapter-dropdown">
-            <option value="all">🌟 جميع الشباتر (كامل قاعدة البيانات - 17 شابتر)</option>
-          </select>
+        <div class="chapter-multiselect-container" id="chapterMultiselectContainer">
+          <button type="button" class="multiselect-trigger" id="multiselectTrigger" aria-expanded="false" aria-haspopup="true">
+            <span class="trigger-icon">🎯</span>
+            <span class="trigger-label">نطاق التدريب:</span>
+            <span class="trigger-text" id="triggerText">🌟 جميع الشباتر (17 شابتر)</span>
+            <span class="trigger-caret">▾</span>
+          </button>
+          
+          <div class="multiselect-dropdown" id="multiselectDropdown" style="display: none;">
+            <div class="multiselect-header">
+              <span class="dropdown-title">تحديد الشباتر للتمرين</span>
+              <div class="multiselect-quick-actions">
+                <button type="button" class="btn-quick-action" id="btnSelectAll">✅ تحديد الكل</button>
+                <button type="button" class="btn-quick-action" id="btnClearAll">❌ تفريغ</button>
+              </div>
+            </div>
+            <div class="multiselect-list" id="multiselectList">
+              <!-- Checkboxes populated dynamically -->
+            </div>
+          </div>
         </div>
+
         <div id="poolCounter" class="pool-counter-badge">جاري التحميل...</div>
+      </div>
+
+      <!-- شريط التمرير الأفقي للأزرار (Chips/Tags Bar) -->
+      <div class="chips-scroll-container" id="chipsScrollContainer" aria-label="أزرار التصفية السريعة للشباتر">
+        <div class="chips-scroll-track" id="chipsScrollTrack">
+          <!-- Chips populated dynamically -->
+        </div>
       </div>
     </section>
 
