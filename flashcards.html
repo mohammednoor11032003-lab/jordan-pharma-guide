@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>وضع التدريب التفاعلي (Flashcards) — دليل الصيدلاني الأردني</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="flashcards.css">
+</head>
+<body>
+
+  <!-- ═══════════ Header ═══════════ -->
+  <header class="flashcards-header">
+    <div class="header-inner">
+      <div class="header-title-group">
+        <div class="header-icon">🎴</div>
+        <div class="header-text">
+          <h1>وضع التدريب التفاعلي (Flashcards)</h1>
+          <p>تحدي الكاونتر والجرعات والوصفات الطبية — أدوية السوق الأردني</p>
+        </div>
+      </div>
+      <a href="index.html" class="header-back-btn">
+        <span>📖</span>
+        <span>العودة إلى الدليل الشامل</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- ═══════════ Main Training Container ═══════════ -->
+  <main class="training-container">
+
+    <!-- لوحة التحكم (الوضع والفلترة) -->
+    <section class="controls-panel" aria-label="أدوات التحكم بالتدريب">
+      <!-- زر تبديل الوضع -->
+      <div class="mode-switcher" role="tablist">
+        <button id="modeCounterBtn" class="mode-btn active" type="button" role="tab" aria-selected="true">
+          <span>🏷️</span>
+          <span>تحدي الكاونتر والجرعات (اسم تجاري ← علمي)</span>
+        </button>
+        <button id="modePrescriptionBtn" class="mode-btn" type="button" role="tab" aria-selected="false">
+          <span>📋</span>
+          <span>تحدي الوصفات والبدائل (اسم علمي ← بدائل تجارية)</span>
+        </button>
+      </div>
+
+      <!-- اختيار الشابتر وعداد البطاقات -->
+      <div class="filter-row">
+        <div class="chapter-select-group">
+          <label for="chapterSelect">🎯 نطاق التدريب:</label>
+          <select id="chapterSelect" class="chapter-dropdown">
+            <option value="all">🌟 جميع الشباتر (كامل قاعدة البيانات - 17 شابتر)</option>
+          </select>
+        </div>
+        <div id="poolCounter" class="pool-counter-badge">جاري التحميل...</div>
+      </div>
+    </section>
+
+    <!-- 3D Flip Card Component -->
+    <section class="flip-scene" id="flipScene" aria-label="بطاقة التدريب التفاعلية">
+      <div class="flip-card" id="flipCard">
+
+        <!-- الوجه الأمامي (Front Face) -->
+        <div class="card-face card-face-front">
+          <div class="card-meta-top">
+            <span id="cardChapterBadge" class="card-badge">Chapter --</span>
+            <span class="card-face-indicator">الوجه الأمامي 👁️</span>
+          </div>
+
+          <div class="card-main-content" id="cardFrontContent">
+            <!-- يُملأ ديناميكياً بواسطة JavaScript -->
+            <div class="card-fallback-icon">💊</div>
+            <div class="card-front-title">جاري تحميل البطاقة...</div>
+          </div>
+
+          <div class="card-footer">
+            <span>💡 انقر على البطاقة أو اضغط <kbd>Space</kbd> لقلبها</span>
+            <span>الوجه 1 من 2</span>
+          </div>
+        </div>
+
+        <!-- الوجه الخلفي (Back Face) -->
+        <div class="card-face card-face-back">
+          <div class="card-meta-top">
+            <span id="cardBackBadge" class="card-badge" style="background: #E0F2F1; color: #00695C;">Chapter --</span>
+            <span class="card-face-indicator" style="color: #00897B;">الوجه الخلفي (التفاصيل والحل) 🎯</span>
+          </div>
+
+          <div class="card-back-body" id="cardBackBody">
+            <!-- يُملأ ديناميكياً بواسطة JavaScript -->
+          </div>
+
+          <div class="card-footer">
+            <span>💡 انقر للعودة للوجه الأمامي</span>
+            <span>الوجه 2 من 2</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- أزرار الإجراءات (القلب والتالي) -->
+    <div class="actions-panel">
+      <button id="btnFlip" class="btn-action btn-flip" type="button" title="قلب البطاقة (Space)">
+        <span>🔄</span>
+        <span>قلب البطاقة (Flip)</span>
+      </button>
+
+      <button id="btnNext" class="btn-action btn-next" type="button" title="البطاقة التالية (السهم الأيمن)">
+        <span>البطاقة التالية</span>
+        <span>➡️</span>
+      </button>
+    </div>
+
+    <!-- تلميحات لوحة المفاتيح -->
+    <div class="keyboard-hints">
+      ⌨️ اختصارات لوحة المفاتيح: <kbd>Space</kbd> أو <kbd>Enter</kbd> لقلب البطاقة &bull; <kbd>مفتاح السهم ➡️</kbd> للانتقال للبطاقة التالية
+    </div>
+
+  </main>
+
+  <!-- ═══════════ Scripts ═══════════ -->
+  <!-- 1. قاعدة البيانات الأصلية بدون أي تعديل -->
+  <script src="data.js"></script>
+
+  <!-- 2. محرك البطاقات التفاعلية المعزول -->
+  <script src="flashcards-engine.js"></script>
+
+  <!-- 3. متحكم الواجهة والتأثيرات التفاعلية -->
+  <script src="flashcards-ui.js"></script>
+
+</body>
+</html>
