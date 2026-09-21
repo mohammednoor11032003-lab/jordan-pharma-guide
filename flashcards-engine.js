@@ -4,6 +4,23 @@
  * دون المساس بأي ملفات أساسية أو اختلاق أي بيانات.
  */
 
+function cleanIcon(icon) {
+    if (!icon || typeof icon !== 'string') return "💊";
+    if (icon.includes("fa-")) {
+        if (icon.includes("stethoscope")) return "🩺";
+        if (icon.includes("pills")) return "💊";
+        if (icon.includes("lungs")) return "🫁";
+        if (icon.includes("shield")) return "🛡️";
+        if (icon.includes("eye")) return "👁️";
+        if (icon.includes("spa")) return "🧴";
+        if (icon.includes("capsules")) return "💊";
+        if (icon.includes("bone")) return "🦴";
+        if (icon.includes("seedling")) return "🌿";
+        return "💊";
+    }
+    return icon;
+}
+
 class FlashcardsEngine {
     constructor(database) {
         if (!database || !Array.isArray(database.chapters)) {
@@ -70,7 +87,7 @@ class FlashcardsEngine {
         targetChapters.forEach(chapter => {
             const chNum = chapter.number;
             const chName = chapter.name;
-            const chIcon = chapter.icon || "📖";
+            const chIcon = cleanIcon(chapter.icon);
 
             (chapter.sections || []).forEach(section => {
                 const secName = section.name;
@@ -249,7 +266,7 @@ class FlashcardsEngine {
             number: ch.number,
             name: ch.name,
             name_en: ch.name_en || "",
-            icon: ch.icon || "📖"
+            icon: cleanIcon(ch.icon)
         }));
     }
 }

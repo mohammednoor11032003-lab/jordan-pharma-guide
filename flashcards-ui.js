@@ -69,9 +69,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // إعادة البطاقة لوضعها الأمامي غير المقلوب
         flipCard.classList.remove('is-flipped');
 
-        // تحديث الشارات العلوية
+        // إخفاء شارة الشابتر تماماً من الوجه الأمامي لمنع كشف الإجابة
+        cardChapterBadge.style.display = 'none';
+
+        // تحديث شارة الوجه الخلفي لتظهر كجزء من الإجابة بعد القلب
         const chapterLabel = `${card.chapter_icon} Ch ${card.chapter_number}: ${card.chapter_name}`;
-        cardChapterBadge.textContent = chapterLabel;
         cardBackBadge.textContent = chapterLabel;
 
         // بناء الوجه الأمامي والوجه الخلفي حسب الوضع
@@ -84,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // عرض بطاقة تحدي الكاونتر والجرعات
     function renderCounterCard(card) {
-        // Front Face
+        // Front Face - حصرياً: الصورة + الاسم التجاري فقط
         let visualHtml = '';
         if (card.front.has_image) {
             visualHtml = `
@@ -103,11 +105,10 @@ document.addEventListener('DOMContentLoaded', () => {
         cardFrontContent.innerHTML = `
             ${visualHtml}
             <div class="card-front-title">${card.front.trade_name}</div>
-            <div class="card-front-subtitle">${card.family_name}</div>
-            <div class="card-front-hint">👆 انقر على البطاقة لمعرفة الاسم العلمي والجرعة</div>
+            <div class="card-front-hint">👆 انقر لمعرفة الاسم العلمي والعائلة والجرعة</div>
         `;
 
-        // Back Face
+        // Back Face - الإجابة الكاملة بعد القلب
         const back = card.back;
         cardBackBody.innerHTML = `
             <div class="back-info-item">
@@ -116,9 +117,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${back.scientific_name_ar ? `<div style="color: var(--text-light); font-size: 0.95rem; margin-top: 2px;">${back.scientific_name_ar}</div>` : ''}
             </div>
 
-            <div class="back-info-item">
-                <div class="back-info-label">العائلة الدوائية (Drug Family)</div>
-                <div class="back-info-value" style="color: var(--primary-dark);">${back.family_name}</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="back-info-item">
+                    <div class="back-info-label">العائلة الدوائية (Drug Family)</div>
+                    <div class="back-info-value" style="color: var(--primary-dark); font-size: 0.95rem;">${back.family_name}</div>
+                </div>
+                <div class="back-info-item">
+                    <div class="back-info-label">الشابتر التابع له</div>
+                    <div class="back-info-value" style="color: var(--text); font-size: 0.95rem;">Ch ${card.chapter_number}: ${card.chapter_name}</div>
+                </div>
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
